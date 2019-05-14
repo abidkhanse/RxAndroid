@@ -32,9 +32,23 @@ class MainActivity : Activity() {
 
         //updateTextWithInput()
         //updateTextWithButton()
-        //updateTextWithDebounce()
+        //updateTextWithDebounce_Button()
         //updateTextWithDebounce_Input()
-        updateTextWithDebounceAndFilter_Input()
+        // updateTextWithDebounceAndFilter_Input()
+         updateTextInReverseOrder()
+
+
+    }
+
+    fun updateTextInReverseOrder() {
+
+        textView = findViewById(R.id.textView)
+        editText = findViewById(R.id.editText)
+
+        val disposable = RxTextView
+            .textChanges(editText)
+            .map{ it.toString().reversed()}
+            .subscribe { textView.text = it }
     }
 
 
@@ -96,9 +110,9 @@ class MainActivity : Activity() {
             .map { 1 }
             .scan(0) { acc , next -> acc + next }
             .subscribe {
-            textView.text = it.toString()
+                textView.text = it.toString()
 
-        }
+            }
     }
 
 
