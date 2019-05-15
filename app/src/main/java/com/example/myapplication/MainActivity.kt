@@ -1,61 +1,49 @@
-package rxandroid.android.com.rxkotlinactivity
+package com.example.myapplication
 
-import android.annotation.SuppressLint
-import android.app.Activity
+import android.content.Intent
+import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
-import io.reactivex.functions.Consumer
-import org.w3c.dom.Text
-import android.R.attr.button
-import android.R.attr.text
-import android.support.design.widget.TextInputEditText
-import android.widget.EditText
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
 
     lateinit var textView            : TextView
     lateinit var editText            : EditText
     lateinit var button              : Button
+    lateinit var rvButton            : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
-        //updateTextWithInput()
-        //updateTextWithButton()
-        //updateTextWithDebounce_Button()
-        //updateTextWithDebounce_Input()
-        // updateTextWithDebounceAndFilter_Input()
-         updateTextInReverseOrder()
-
-
+        openRecycleViewActivity()
+        updateTextWithDebounceAndFilter_Input()
+        updateTextWithDebounceFunction_Button()
     }
 
-    fun updateTextInReverseOrder() {
+    private fun openRecycleViewActivity() {
 
-        textView = findViewById(R.id.textView)
-        editText = findViewById(R.id.editText)
+        rvButton = findViewById(R.id.rvButton) as Button
 
-        val disposable = RxTextView
-            .textChanges(editText)
-            .map{ it.toString().reversed()}
-            .subscribe { textView.text = it }
+        val subscribe = RxView.clicks(rvButton).subscribe {
+
+            val intent = Intent(this, RecyclerList::class.java)
+            startActivity(intent)
+        }
     }
+
 
 
     fun updateTextWithDebounceAndFilter_Input(){
 
-        textView = findViewById(R.id.textView)
-        editText = findViewById(R.id.editText)
+        textView = findViewById(R.id.textViewItem) as TextView
+        editText = findViewById(R.id.editText) as EditText
 
         val disposable = RxTextView
             .textChanges(editText)
@@ -66,10 +54,10 @@ class MainActivity : Activity() {
 
 
 
-    fun updateTextWithDebounce_Button() {
+    fun updateTextWithDebounceFunction_Button() {
 
-        textView = findViewById(R.id.textView)
-        button = findViewById(R.id.button)
+        textView = findViewById(R.id.textViewItem) as TextView
+        button = findViewById(R.id.button) as Button
 
         val disposable = RxView
 
@@ -83,10 +71,10 @@ class MainActivity : Activity() {
     }
 
 
-    fun updateTextWithThrottle_Button() {
+    fun updateTextWithThrottleFunction_Button() {
 
-        textView = findViewById(R.id.textView)
-        button = findViewById(R.id.button)
+        textView = findViewById(R.id.textViewItem) as TextView
+        button = findViewById(R.id.button) as Button
 
         val disposable = RxView
 
@@ -100,10 +88,10 @@ class MainActivity : Activity() {
     }
 
 
-    fun updateTextWithScan_Button() {
+    fun updateTextWithScanFunction_Button() {
 
-        textView = findViewById(R.id.textView)
-        button = findViewById(R.id.button)
+        textView = findViewById(R.id.textViewItem) as TextView
+        button = findViewById(R.id.button) as Button
 
         val disposable = RxView.clicks(button)
 
@@ -111,15 +99,14 @@ class MainActivity : Activity() {
             .scan(0) { acc , next -> acc + next }
             .subscribe {
                 textView.text = it.toString()
-
             }
     }
 
 
     fun updateTextWithInput() {
 
-        textView = findViewById(R.id.textView)
-        editText = findViewById(R.id.editText)
+        textView = findViewById(R.id.textViewItem) as TextView
+        editText = findViewById(R.id.editText) as EditText
 
         val disposable = RxTextView
             .textChanges(editText)
@@ -127,15 +114,16 @@ class MainActivity : Activity() {
     }
 
 
-    fun updateTextWithDebounce_Input(){
+    fun updateTextWithDebounce_Input() {
 
-        textView = findViewById(R.id.textView)
-        editText = findViewById(R.id.editText)
+        textView = findViewById(R.id.textViewItem) as TextView
+        editText = findViewById(R.id.editText) as EditText
 
         val disposable = RxTextView
             .textChanges(editText)
             .debounce(300, TimeUnit.MILLISECONDS)
             .subscribe { textView.text = it }
     }
+
 
 }
